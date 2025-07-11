@@ -1,17 +1,36 @@
 package com.example.tripplaner.ui.screens.auth
 
+import androidx.compose.animation.core.*
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Place
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.tripplaner.R
 import com.example.tripplaner.TripPlannerApplication
 import com.example.tripplaner.ui.navigation.Screen
 import com.example.tripplaner.ui.viewmodel.AuthState
@@ -55,167 +74,320 @@ fun RegisterScreen(
             )
         }
     ) { paddingValues ->
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+                .background(
+                    Brush.verticalGradient(
+                        colors = listOf(
+                            Color(0xFF1976D2),
+                            Color(0xFF42A5F5),
+                            Color(0xFF90CAF9)
+                        )
+                    )
+                )
         ) {
-            Text(
-                text = "Crear Cuenta",
-                style = MaterialTheme.typography.headlineLarge,
-                color = MaterialTheme.colorScheme.primary
+            // Background airplane image
+            Image(
+                painter = painterResource(id = R.drawable.airplane_background),
+                contentDescription = "Airplane background",
+                modifier = Modifier
+                    .fillMaxSize()
+                    .alpha(0.15f)
             )
             
-            Spacer(modifier = Modifier.height(32.dp))
-            
-            OutlinedTextField(
-                value = username,
-                onValueChange = { 
-                    username = it
-                    validationError = ""
-                },
-                label = { Text("Nombre de usuario") },
-                modifier = Modifier.fillMaxWidth(),
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Next
-                ),
-                singleLine = true
-            )
-            
-            Spacer(modifier = Modifier.height(16.dp))
-            
-            OutlinedTextField(
-                value = email,
-                onValueChange = { 
-                    email = it
-                    validationError = ""
-                },
-                label = { Text("Email") },
-                modifier = Modifier.fillMaxWidth(),
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Email,
-                    imeAction = ImeAction.Next
-                ),
-                singleLine = true
-            )
-            
-            Spacer(modifier = Modifier.height(16.dp))
-            
-            OutlinedTextField(
-                value = password,
-                onValueChange = { 
-                    password = it
-                    validationError = ""
-                },
-                label = { Text("Contraseña") },
-                modifier = Modifier.fillMaxWidth(),
-                visualTransformation = PasswordVisualTransformation(),
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Password,
-                    imeAction = ImeAction.Next
-                ),
-                singleLine = true
-            )
-            
-            Spacer(modifier = Modifier.height(16.dp))
-            
-            OutlinedTextField(
-                value = confirmPassword,
-                onValueChange = { 
-                    confirmPassword = it
-                    validationError = ""
-                },
-                label = { Text("Confirmar contraseña") },
-                modifier = Modifier.fillMaxWidth(),
-                visualTransformation = PasswordVisualTransformation(),
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Password,
-                    imeAction = ImeAction.Done
-                ),
-                singleLine = true
-            )
-            
-            Spacer(modifier = Modifier.height(24.dp))
-            
-            // Mostrar errores de validación
-            if (validationError.isNotBlank()) {
-                Text(
-                    text = validationError,
-                    color = MaterialTheme.colorScheme.error,
-                    style = MaterialTheme.typography.bodyMedium
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+                    .padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                // Animated loading indicator
+                val infiniteTransition = rememberInfiniteTransition()
+                val alpha by infiniteTransition.animateFloat(
+                    initialValue = 0.3f,
+                    targetValue = 1f,
+                    animationSpec = infiniteRepeatable(
+                        animation = tween(2000),
+                        repeatMode = RepeatMode.Reverse
+                    )
                 )
-                Spacer(modifier = Modifier.height(16.dp))
-            }
-            
-            // Mostrar errores de autenticación
-            if (authState is AuthState.Error) {
+                
+                // App logo and title
+                Box(
+                    modifier = Modifier
+                        .size(120.dp)
+                        .clip(RoundedCornerShape(20.dp))
+                        .background(Color.White.copy(alpha = 0.9f))
+                        .alpha(alpha),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Place,
+                        contentDescription = "TripPlanner Logo",
+                        modifier = Modifier.size(60.dp),
+                        tint = Color(0xFF1976D2)
+                    )
+                }
+                
+                Spacer(modifier = Modifier.height(24.dp))
+                
                 Text(
-                    text = (authState as AuthState.Error).message,
-                    color = MaterialTheme.colorScheme.error,
-                    style = MaterialTheme.typography.bodyMedium
+                    text = "TripPlanner",
+                    style = MaterialTheme.typography.headlineLarge.copy(
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 32.sp
+                    ),
+                    color = Color.White,
+                    textAlign = TextAlign.Center
                 )
-                Spacer(modifier = Modifier.height(16.dp))
-            }
-            
-            Button(
-                onClick = {
-                    // Validación local
-                    when {
-                        username.isBlank() -> {
-                            validationError = "El nombre de usuario es requerido"
-                            return@Button
+                
+                Text(
+                    text = "Únete a la aventura",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = Color.White.copy(alpha = 0.8f),
+                    textAlign = TextAlign.Center
+                )
+                
+                Spacer(modifier = Modifier.height(32.dp))
+                
+                // Register form card
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(16.dp)),
+                    colors = CardDefaults.cardColors(
+                        containerColor = Color.White.copy(alpha = 0.95f)
+                    ),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+                ) {
+                    Column(
+                        modifier = Modifier.padding(24.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = "Crear Cuenta",
+                            style = MaterialTheme.typography.headlineSmall.copy(
+                                fontWeight = FontWeight.Bold
+                            ),
+                            color = Color(0xFF1976D2),
+                            textAlign = TextAlign.Center
+                        )
+                        
+                        Spacer(modifier = Modifier.height(24.dp))
+                        
+                        OutlinedTextField(
+                            value = username,
+                            onValueChange = { 
+                                username = it
+                                validationError = ""
+                            },
+                            label = { Text("Nombre de usuario") },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Default.Person,
+                                    contentDescription = "Username icon",
+                                    tint = Color(0xFF1976D2)
+                                )
+                            },
+                            modifier = Modifier.fillMaxWidth(),
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Text,
+                                imeAction = ImeAction.Next
+                            ),
+                            singleLine = true,
+                            colors = OutlinedTextFieldDefaults.colors(
+                                focusedBorderColor = Color(0xFF1976D2),
+                                unfocusedBorderColor = Color(0xFF1976D2).copy(alpha = 0.5f)
+                            )
+                        )
+                        
+                        Spacer(modifier = Modifier.height(16.dp))
+                        
+                        OutlinedTextField(
+                            value = email,
+                            onValueChange = { 
+                                email = it
+                                validationError = ""
+                            },
+                            label = { Text("Email") },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Default.Email,
+                                    contentDescription = "Email icon",
+                                    tint = Color(0xFF1976D2)
+                                )
+                            },
+                            modifier = Modifier.fillMaxWidth(),
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Email,
+                                imeAction = ImeAction.Next
+                            ),
+                            singleLine = true,
+                            colors = OutlinedTextFieldDefaults.colors(
+                                focusedBorderColor = Color(0xFF1976D2),
+                                unfocusedBorderColor = Color(0xFF1976D2).copy(alpha = 0.5f)
+                            )
+                        )
+                        
+                        Spacer(modifier = Modifier.height(16.dp))
+                        
+                        OutlinedTextField(
+                            value = password,
+                            onValueChange = { 
+                                password = it
+                                validationError = ""
+                            },
+                            label = { Text("Contraseña") },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Default.Lock,
+                                    contentDescription = "Password icon",
+                                    tint = Color(0xFF1976D2)
+                                )
+                            },
+                            modifier = Modifier.fillMaxWidth(),
+                            visualTransformation = PasswordVisualTransformation(),
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Password,
+                                imeAction = ImeAction.Next
+                            ),
+                            singleLine = true,
+                            colors = OutlinedTextFieldDefaults.colors(
+                                focusedBorderColor = Color(0xFF1976D2),
+                                unfocusedBorderColor = Color(0xFF1976D2).copy(alpha = 0.5f)
+                            )
+                        )
+                        
+                        Spacer(modifier = Modifier.height(16.dp))
+                        
+                        OutlinedTextField(
+                            value = confirmPassword,
+                            onValueChange = { 
+                                confirmPassword = it
+                                validationError = ""
+                            },
+                            label = { Text("Confirmar contraseña") },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Default.Lock,
+                                    contentDescription = "Confirm password icon",
+                                    tint = Color(0xFF1976D2)
+                                )
+                            },
+                            modifier = Modifier.fillMaxWidth(),
+                            visualTransformation = PasswordVisualTransformation(),
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Password,
+                                imeAction = ImeAction.Done
+                            ),
+                            singleLine = true,
+                            colors = OutlinedTextFieldDefaults.colors(
+                                focusedBorderColor = Color(0xFF1976D2),
+                                unfocusedBorderColor = Color(0xFF1976D2).copy(alpha = 0.5f)
+                            )
+                        )
+                        
+                        Spacer(modifier = Modifier.height(24.dp))
+                        
+                        // Mostrar errores de validación
+                        if (validationError.isNotBlank()) {
+                            Text(
+                                text = validationError,
+                                color = MaterialTheme.colorScheme.error,
+                                style = MaterialTheme.typography.bodyMedium,
+                                textAlign = TextAlign.Center
+                            )
+                            Spacer(modifier = Modifier.height(16.dp))
                         }
-                        email.isBlank() -> {
-                            validationError = "El email es requerido"
-                            return@Button
+                        
+                        // Mostrar errores de autenticación
+                        if (authState is AuthState.Error) {
+                            Text(
+                                text = (authState as AuthState.Error).message,
+                                color = MaterialTheme.colorScheme.error,
+                                style = MaterialTheme.typography.bodyMedium,
+                                textAlign = TextAlign.Center
+                            )
+                            Spacer(modifier = Modifier.height(16.dp))
                         }
-                        !email.contains("@") -> {
-                            validationError = "El email no es válido"
-                            return@Button
+                        
+                        Button(
+                            onClick = {
+                                // Validación local
+                                when {
+                                    username.isBlank() -> {
+                                        validationError = "El nombre de usuario es requerido"
+                                        return@Button
+                                    }
+                                    email.isBlank() -> {
+                                        validationError = "El email es requerido"
+                                        return@Button
+                                    }
+                                    !email.contains("@") -> {
+                                        validationError = "El email no es válido"
+                                        return@Button
+                                    }
+                                    password.isBlank() -> {
+                                        validationError = "La contraseña es requerida"
+                                        return@Button
+                                    }
+                                    password.length < 6 -> {
+                                        validationError = "La contraseña debe tener al menos 6 caracteres"
+                                        return@Button
+                                    }
+                                    password != confirmPassword -> {
+                                        validationError = "Las contraseñas no coinciden"
+                                        return@Button
+                                    }
+                                    else -> {
+                                        validationError = ""
+                                        viewModel.register(username, email, password)
+                                    }
+                                }
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(50.dp),
+                            enabled = authState !is AuthState.Loading,
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color(0xFF1976D2)
+                            ),
+                            shape = RoundedCornerShape(12.dp)
+                        ) {
+                            if (authState is AuthState.Loading) {
+                                CircularProgressIndicator(
+                                    modifier = Modifier.size(24.dp),
+                                    color = Color.White,
+                                    strokeWidth = 2.dp
+                                )
+                            } else {
+                                Text(
+                                    "Registrarse",
+                                    style = MaterialTheme.typography.bodyLarge.copy(
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                )
+                            }
                         }
-                        password.isBlank() -> {
-                            validationError = "La contraseña es requerida"
-                            return@Button
-                        }
-                        password.length < 6 -> {
-                            validationError = "La contraseña debe tener al menos 6 caracteres"
-                            return@Button
-                        }
-                        password != confirmPassword -> {
-                            validationError = "Las contraseñas no coinciden"
-                            return@Button
-                        }
-                        else -> {
-                            validationError = ""
-                            viewModel.register(username, email, password)
+                        
+                        Spacer(modifier = Modifier.height(16.dp))
+                        
+                        TextButton(
+                            onClick = {
+                                navController.navigate(Screen.Login.route)
+                            }
+                        ) {
+                            Text(
+                                "¿Ya tienes cuenta? Inicia sesión",
+                                color = Color(0xFF1976D2),
+                                style = MaterialTheme.typography.bodyMedium
+                            )
                         }
                     }
-                },
-                modifier = Modifier.fillMaxWidth(),
-                enabled = authState !is AuthState.Loading
-            ) {
-                if (authState is AuthState.Loading) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(20.dp),
-                        color = MaterialTheme.colorScheme.onPrimary
-                    )
-                } else {
-                    Text("Registrarse")
                 }
-            }
-            
-            Spacer(modifier = Modifier.height(16.dp))
-            
-            TextButton(
-                onClick = {
-                    navController.navigate(Screen.Login.route)
-                }
-            ) {
-                Text("¿Ya tienes cuenta? Inicia sesión")
             }
         }
     }

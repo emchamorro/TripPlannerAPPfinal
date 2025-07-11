@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="200"
+    android:viewportHeight="200">
+    
+    <!-- Airplane silhouette -->
+    <path
+        android:fillColor="#1A000000"
+        android:pathData="M20,100 L180,100 L160,80 L140,80 L120,60 L100,60 L80,80 L60,80 L40,100 Z"/>
+    
+    <!-- Airplane body -->
+    <path
+        android:fillColor="#1A000000"
+        android:pathData="M80,90 L120,90 L110,100 L90,100 Z"/>
+    
+    <!-- Wings -->
+    <path
+        android:fillColor="#1A000000"
+        android:pathData="M60,85 L140,85 L130,95 L70,95 Z"/>
+    
+    <!-- Tail -->
+    <path
+        android:fillColor="#1A000000"
+        android:pathData="M85,70 L95,70 L90,85 L90,75 Z"/>
+</vector> 

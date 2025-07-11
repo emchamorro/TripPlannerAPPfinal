@@ -17,6 +17,7 @@ data class Trip(
     val transportMode: String,
     val accommodationType: String,
     val comment: String? = null,
+    val tripDate: Long? = null, // Fecha del viaje en milisegundos
     val createdAt: Long = System.currentTimeMillis(),
     val updatedAt: Long = System.currentTimeMillis()
 ) 
